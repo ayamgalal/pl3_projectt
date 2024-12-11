@@ -38,4 +38,9 @@ type DigitalDictionary() =
         | ex -> 
             printfn "Error saving file: %s" ex.Message
             false
+    member this.DeleteWord(word: string) =
+     if word.Trim() = "" then
+         failwith "Word cannot be empty."
+     dictionary <- dictionary.Remove(word.ToLower())
+
 
