@@ -52,6 +52,39 @@ let main _ =
         resultListBox; addButton; updateButton; deleteButton; 
         searchByKeywordButton; searchByDefinitionButton; saveButton; loadButton
     |])
+        // Handling the update button click event
+    updateButton.Click.Add(fun _ -> 
+        try
+            dictionary.UpdateWord(wordTextBox.Text, definitionTextBox.Text)
+            MessageBox.Show("Word updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
+        with ex -> 
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
+    )
+
+    // Handling the add button click event
+    addButton.Click.Add(fun _ -> 
+        try
+            dictionary.AddWord(wordTextBox.Text, definitionTextBox.Text)
+            MessageBox.Show("Word added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
+            wordTextBox.Clear()
+            definitionTextBox.Clear()
+        with ex -> 
+            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
+    )
+
+    // Handling the save button click event
+    saveButton.Click.Add(fun _ -> 
+        try
+            if dictionary.SaveToFile("dictionary.json") then
+                MessageBox.Show("Dictionary saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
+                let filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "dictionary.json")
+                File.Copy("dictionary.json", filePath, true)
+                MessageBox.Show($"A copy of the dictionary has been downloaded to: {filePath}", "Download Complete", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
+            else
+                MessageBox.Show("Failed to save the dictionary.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
+        with ex -> 
+            MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
+    )
 
 
     // Start the form
