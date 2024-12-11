@@ -85,6 +85,18 @@ let main _ =
         with ex -> 
             MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
     )
+    deleteButton.Click.Add(fun _ -> 
+    try
+        dictionary.DeleteWord(wordTextBox.Text)
+        if dictionary.SaveToFile("dictionary.json") then
+            MessageBox.Show("Word deleted and dictionary saved successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
+        else
+            MessageBox.Show("Failed to save the dictionary after deletion.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
+        wordTextBox.Clear()
+        definitionTextBox.Clear()
+    with ex -> 
+        MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
+    )
 
 
     // Start the form
