@@ -45,15 +45,13 @@ type DigitalDictionary() =
 
     //Search function   
     member this.SearchWord(word: string) =
-        if String.IsNullOrWhiteSpace(word) then None
-        else dictionary.TryFind(word.ToLower())
+        dictionary.TryFind(word.ToLower())
 
     member this.SearchByKeyword(keyword: string) =
-        let trimmedKeyword = keyword?.Trim().ToLower() // Handles null
-        dictionary 
-        |> Map.filter (fun key value -> 
-            String.IsNullOrEmpty(trimmedKeyword) || 
-            key.Contains(trimmedKeyword) || 
-            value.Contains(trimmedKeyword))
+        let trimmedKeyword = keyword.Trim().ToLower()
+        dictionary
+        |> Map.filter (fun key value ->
+            trimmedKeyword = "" || key.Contains(trimmedKeyword) || value.Contains(trimmedKeyword))
+        |> Map.toSeq
 
 

@@ -101,21 +101,12 @@ let main _ =
     //Handling the search by keyword button click event
     searchByKeywordButton.Click.Add(fun _ -> 
         let keyword = wordTextBox.Text
-        if String.IsNullOrWhiteSpace(keyword) then
-            resultListBox.Items.Add("Please enter a valid keyword.")
-        else
-            try
-                let results = dictionary.SearchByKeyword(keyword)
-                resultListBox.Items.Clear()
-                if Seq.isEmpty results then
-                    resultListBox.Items.Add("No results found.")
-                else
-                    results 
-                    |> Seq.iter (fun (key, value) -> 
-                        resultListBox.Items.Add($"{key}: {value}") |> ignore)
-            with
-            | ex -> MessageBox.Show($"An error occurred: {ex.Message}") |> ignore
+        let results = dictionary.SearchByKeyword(keyword)
+        resultListBox.Items.Clear()
+        results |> Seq.iter (fun (key, value) -> 
+            resultListBox.Items.Add($"{key}: {value}") |> ignore
     )
+)
 
 
     // Start the form
