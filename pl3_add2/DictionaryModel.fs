@@ -39,8 +39,21 @@ type DigitalDictionary() =
             printfn "Error saving file: %s" ex.Message
             false
     member this.DeleteWord(word: string) =
-     if word.Trim() = "" then
-         failwith "Word cannot be empty."
-     dictionary <- dictionary.Remove(word.ToLower())
+        if word.Trim() = "" then
+            failwith "Word cannot be empty."
+        dictionary <- dictionary.Remove(word.ToLower())
+
+    //Search function   
+    member this.SearchWord(word: string) =
+        if String.IsNullOrWhiteSpace(word) then None
+        else dictionary.TryFind(word.ToLower())
+
+    member this.SearchByKeyword(keyword: string) =
+        let trimmedKeyword = keyword?.Trim().ToLower() // Handles null
+        dictionary 
+        |> Map.filter (fun key value -> 
+            String.IsNullOrEmpty(trimmedKeyword) || 
+            key.Contains(trimmedKeyword) || 
+            value.Contains(trimmedKeyword))
 
 
