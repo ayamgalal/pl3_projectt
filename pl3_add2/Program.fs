@@ -108,6 +108,16 @@ let main _ =
     )
 )
 
+    // search By Definition
+    searchByDefinitionButton.Click.Add(fun _ -> 
+    let definition = definitionTextBox.Text
+    let results = dictionary.SearchByDefinition(definition)
+    resultListBox.Items.Clear()
+    results |> Seq.iter (fun (key, value) -> 
+        resultListBox.Items.Add($"{key}: {value}") |> ignore
+    )
+    MessageBox.Show("Definition search completed.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
+)
 
     // Start the form
     Application.Run(form)

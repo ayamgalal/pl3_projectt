@@ -55,3 +55,14 @@ type DigitalDictionary() =
         |> Map.toSeq
 
 
+
+    // search by definition
+    member this.SearchByDefinition(definition: string) =
+     let trimmedDefinition = definition.Trim().ToLower()
+     if trimmedDefinition = "" then
+         Seq.empty // Return an empty sequence if the definition is empty
+     else
+         dictionary
+         |> Map.filter (fun key value -> value.ToLower().Contains(trimmedDefinition))
+         |> Map.toSeq
+         
