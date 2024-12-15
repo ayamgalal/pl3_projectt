@@ -66,3 +66,20 @@ type DigitalDictionary() =
          |> Map.filter (fun key value -> value.ToLower().Contains(trimmedDefinition))
          |> Map.toSeq
          
+    member this.LoadFromFile(filePath: string) =
+        try
+            if filePath.EndsWith(".json") then
+                let json = File.ReadAllText(filePath)
+                dictionary <- JsonConvert.DeserializeObject<Map<string, string>>(json)
+            elif filePath.EndsWith(".xml") then
+                let serializer = XmlSerializer(typeof<Map<string, string>>)
+                use reader = new StreamReader(filePath)
+                dictionary <- serializer.Deserialize(reader) :?> Map<string, string>
+            else
+                failwith "Unsupported file format."
+            true
+        with
+        | ex -> 
+            printfn "Error loading file: %s" ex.Message
+            false
+            

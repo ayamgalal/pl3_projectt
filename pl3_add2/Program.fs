@@ -133,6 +133,28 @@ let main _ =
         MessageBox.Show("Definition search completed.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
     )
 
+    
+    loadButton.Click.Add(fun _ -> 
+    let openFileDialog = new OpenFileDialog()
+    openFileDialog.Filter <- "JSON files (.json)|.json|XML files (.xml)|.xml"
+    openFileDialog.Title <- "Load Dictionary"
+
+    if openFileDialog.ShowDialog() = DialogResult.OK then
+        let filePath = openFileDialog.FileName
+        try
+            if dictionary.LoadFromFile(filePath) then
+                MessageBox.Show("Dictionary loaded successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information) |> ignore
+                resultListBox.Items.Clear()
+                dictionary.SearchByKeyword("") 
+                |> Seq.iter (fun (key, value) -> 
+                    resultListBox.Items.Add($"{key}: {value}") |> ignore
+                )
+            else
+                MessageBox.Show("Failed to load the dictionary.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
+        with ex -> 
+            MessageBox.Show($"Error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error) |> ignore
+    )
+
     // Start the form
     Application.Run(form)
     0
